@@ -1,5 +1,7 @@
 from operator import itemgetter
 import requests
+from plotly.graph_objs import Bar
+from plotly import offline
 
 #API çağrısı yap.
 url='https://hacker-news.firebaseio.com/v0/topstories.json'
@@ -25,7 +27,27 @@ for submission_id in submission_ids[:10]:
     }
     submission_dicts.append(submission_dict)
 submission_dicts=sorted(submission_dicts,key=itemgetter('comments'),reverse=True)
-for submission_dict in submission_dicts:
-    print(f"\nTitle: {submission_dict['title']}")
-    print(f"Discussion link: {submission_dict['hn_link']}")
-    print(f"Comments: {submission_dict['comments']}")
+print(submission_dicts)
+
+titles,hn_links,comments=[],[],[]
+for i in range(len(submission_dicts)):
+    titles.append(submission_dicts[i]['title'])
+    hn_links.append(submission_dicts[i]['hn_link'])
+    comments.append(submission_dicts[i]['comments'])
+
+
+#Veri görselleştirme
+data=[{
+    'type':'bar',
+    'x':titles,
+    'y':comments,
+}]
+
+my_layout={
+        'title':'Most commented topics in Hacker News',
+        'xaxis':{'title':'Topic'},
+        'yaxis':{'title':'Comments'}
+}
+
+fig={'data':data,'layout':my_layout}
+offline.plot(fig,filename='hn_topics.html')
