@@ -27,26 +27,44 @@ for submission_id in submission_ids[:10]:
     }
     submission_dicts.append(submission_dict)
 submission_dicts=sorted(submission_dicts,key=itemgetter('comments'),reverse=True)
-print(submission_dicts)
+
 
 titles,hn_links,comments=[],[],[]
 for i in range(len(submission_dicts)):
+    title=submission_dicts[i]['title']
+    link=submission_dicts[i]['hn_link']
+    link_with_title=f"<a href='{link}'>{title}</a>"
     titles.append(submission_dicts[i]['title'])
-    hn_links.append(submission_dicts[i]['hn_link'])
+    hn_links.append(link_with_title)
     comments.append(submission_dicts[i]['comments'])
 
 
 #Veri görselleştirme
 data=[{
     'type':'bar',
-    'x':titles,
+    'x':hn_links,
     'y':comments,
+    'marker':{
+        'color':'rgb(60,100,150)',
+        'line':{'width':1.5,'color':'rgb(25,25,25)'
+        }
+    },
+    'opacity':0.6,
 }]
 
 my_layout={
         'title':'Most commented topics in Hacker News',
-        'xaxis':{'title':'Topic'},
-        'yaxis':{'title':'Comments'}
+        'titlefont':{'size':28},
+        'xaxis':{
+            'title':'Topics',
+            'titlefont':{'size':24},
+            'tickfont':{'size':14},
+            },
+        'yaxis':{
+            'title':'Comments',
+            'titlefont':{'size':24},
+            'tickfont':{'size':14},
+            }
 }
 
 fig={'data':data,'layout':my_layout}
